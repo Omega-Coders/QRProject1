@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+    <form action="login" method="POST">
+        {% csrf_token %}
+        <center>
+            <br><br><br><br>
+        <div>
+            <span class="details"><h3>LOGIN</h3></span><br>
+        </div>
+        <div>
+            <span class="details">Email</span>
+            <input name="Email" type="text" placeholder="Enter your email" required>
+        </div>
+        <div >
+            <span class="details">Password</span>
+            <input name="password" type="password" placeholder="Enter your Password" required>
+        </div><br><br>
+
+        <div class="button">
+            <input type="submit" value="Login">
+          </div>
+       </center>
+   </form>
+    </body>
+</html>
