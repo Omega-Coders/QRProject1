@@ -7,6 +7,10 @@ urlpatterns = [
     path('login/login', views.login),
     path('register/login', views.login),
 
+    path('login/generate_qr', views.generate_qr),
+    path('register/generate_qr', views.generate_qr),
+
+
 
     
 ]

@@ -1,16 +1,54 @@
 <!DOCTYPE html>
 <html>
-    <body>
+    <body><h2>
+        <form action="generate_qr" method="POST">
+        {% csrf_token %}
         <center><br><br>
-        <div class="input-box">
-            <span class="details">User Name : {{obj.email}}</span><br>
-            <span class="details">Department : {{obj.department}}</span>
+        <div class="input-box" >
+            <label class="details"  name="UserName" value="{{teacher.obj.email}}">User Name : {{teacher.obj.email}}</label><br>
             
-          </div>
+        </div><br><br>
+        <span class="details">User Department : {{teacher.obj.department}}</span>
 
-        <div>
+        <div class="input-box">
+            <span class="details">Select Student Department :</span>
+            <select name="dept" >
 
+                {% for i in department.obj %}
+                <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+                
+            </select>
+        </div><br>
+
+        <div class="input-box">
+            <span class="details" >Select Section :</span>
+            <select name="section" >
+
+                {% for i in section %}
+                <option  value="{{i}}" >{{i}}</option>
+                {% endfor %}
+                
+            </select>
+        </div><br>
+
+        <div class="input-box">
+            <span class="details">Select Period :</span>
+            <select name="period" >
+
+                {% for i in period %}
+                <option value="{{i}}" >{{i}}</option>
+                {% endfor %}
+                
+            </select>
+        </div>
+        <br><br>
+        <div class="button">
+            <input type="submit" value="Generate QR-Code ">
         </div>
         </center>
+        </h2>
+
+    </form>   
     </body>
 </html>

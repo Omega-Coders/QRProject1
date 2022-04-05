@@ -47,12 +47,40 @@ def login(request):
                context={'obj':i}
 
         if(Email in Teacher_dir and Teacher_dir[Email]==password):
-            
-            return render(request,'take_attendence.html',context)
+            dip_list=[]
+            for i in Department.objects.all():
+                dip_list.append(i.deptName)
+
+            context1={'obj':dip_list}
+            period=[1, 2, 3, 4, 5, 6, 7, 8]
+            section=['-','A','B','C','D']
+            return render(request,'take_attendence.html',{'teacher':context,'department':context1,'period':period,'section':section})
         else:
             return HttpResponse("Invalid password or Email Id")
 
     else:
         return HttpResponse("fail")
         
-    
+
+def generate_qr(request):
+    if request.method=='POST':
+        user_name=request.POST.get('UserName')
+        stu_dep=request.POST['dept']
+        stu_sec=request.POST['section']
+        period=request.POST['period']
+
+        user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period)
+        user.save()
+        print("Qrcode created")
+        return HttpResponse("Attendence object created")
+
+    else:
+        print("error---enjoy")
+        return HttpResponse("error---enjoy")
+
+
+
+
+
+        
+
