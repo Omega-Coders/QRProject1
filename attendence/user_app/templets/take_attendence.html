@@ -5,10 +5,13 @@
         {% csrf_token %}
         <center><br><br>
         <div class="input-box" >
-            <label class="details"  name="UserName" value="{{teacher.obj.email}}">User Name : {{teacher.obj.email}}</label><br>
+            <label class="details"  name="abc" value="{{teacher.obj.email}}">User Name : {{teacher.obj.email}}</label><br>
             
         </div><br><br>
-        <span class="details">User Department : {{teacher.obj.department}}</span>
+        <div class="input-box">
+            <input name = "UserName"   value="{{teacher.obj.email}}" hidden>
+        </div>
+        <span class="details">User Department : {{teacher.obj.department}}</span><br><br>
 
         <div class="input-box">
             <span class="details">Select Student Department :</span>
