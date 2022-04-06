@@ -1,8 +1,17 @@
+from django.http import HttpResponse
+import qrcode
+from pyqrcode import QRCode
+from django.http import FileResponse
 
 from multiprocessing import context
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Teacher, Department,Attendence
+
+import os
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 def register1(request):
     
@@ -61,7 +70,15 @@ def login(request):
 
     else:
         return HttpResponse("fail")
-        
+
+
+
+
+
+from io import BytesIO
+from django.core.files import File
+from PIL import Image, ImageDraw
+
 
 def generate_qr(request):
     if request.method=='POST':
@@ -70,19 +87,62 @@ def generate_qr(request):
         stu_sec=request.POST['section']
         period=request.POST['period']
 
+        
+
         date=request.POST['date']
 
+        s = "www.geeksforgeeks.org"
+  
+        
+        img = qrcode.make(s)
+  
+
+        canvas=Image.new('RGB',(400,410),'white')
+        draw = ImageDraw.Draw(canvas)
+        canvas.paste(img)
+        fname = f'qr_code'+stu_dep+str(stu_sec)+str(period)+'.png'
+        print("**",fname)
+        buffer = BytesIO()
+        canvas.save(buffer,'PNG')
+
+
         user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period,Date=date)
+        user.img.save(fname,File(buffer),save=False)
         user.save()
         print("Qrcode created")
-        return HttpResponse("Attendence object created")
+
+        strr=os.path.join(str(BASE_DIR)+"\\attendence\\All_QR_codes"+("\\"+str(fname)))
+
+        img = open(strr, 'rb')
+        print(strr)
+
+        response = FileResponse(img)
+
+        return response
+        
 
     else:
         print("error---enjoy")
         return HttpResponse("error---enjoy")
 
 
+# img = Image.open()
+# def get_qr(request,temp):
+#     return HttpResponse()
 
+
+def get_qr(response,temp):
+    strr=os.path.join(str(BASE_DIR)+"\\attendence\\All_QR_codes"+("\\"+str(temp)+".png"))
+
+    img = open(strr, 'rb')
+    print(strr)
+
+    response = FileResponse(img)
+
+    return response
+        
+
+    
 
 
         
