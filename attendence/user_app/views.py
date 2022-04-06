@@ -2,9 +2,10 @@
 from multiprocessing import context
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Teacher, Department, Attendence
+from .models import Teacher, Department,Attendence
 
 def register1(request):
+    
     return render(request, "reg_form.html")
 
 def login1(request):
@@ -69,7 +70,9 @@ def generate_qr(request):
         stu_sec=request.POST['section']
         period=request.POST['period']
 
-        user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period)
+        date=request.POST['date']
+
+        user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period,Date=date)
         user.save()
         print("Qrcode created")
         return HttpResponse("Attendence object created")

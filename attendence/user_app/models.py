@@ -20,12 +20,12 @@ class Attendence(models.Model):
     Student_department = models.CharField(max_length=5,null=True)
     section = models.CharField(max_length=1, null=True)
     period = models.IntegerField()
+    Date   = models.CharField(max_length=10)
 
     def __str__(self):
         return str(self.Teacher_user_id)
 
     
-
 
 
 
