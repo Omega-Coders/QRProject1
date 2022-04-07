@@ -3,7 +3,7 @@ import qrcode
 from pyqrcode import QRCode
 from django.http import FileResponse
 
-from multiprocessing import context
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Teacher, Department,Attendence
@@ -91,33 +91,27 @@ def generate_qr(request):
 
         date=request.POST['date']
 
-        s = "www.geeksforgeeks.org"
+        s = "http://127.0.0.1:8000/link"
   
         
         img = qrcode.make(s)
   
-
-        canvas=Image.new('RGB',(400,410),'white')
-        draw = ImageDraw.Draw(canvas)
-        canvas.paste(img)
-        fname = f'qr_code'+stu_dep+str(stu_sec)+str(period)+'.png'
-        print("**",fname)
-        buffer = BytesIO()
-        canvas.save(buffer,'PNG')
-
+       
 
         user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period,Date=date)
-        user.img.save(fname,File(buffer),save=False)
-        user.save()
-        print("Qrcode created")
+    
+        fname="Qr_img.png"
+        img.save(fname,scale=6)
+        
 
-        strr=os.path.join(str(BASE_DIR)+"\\attendence\\All_QR_codes"+("\\"+str(fname)))
+
+
+        strr=os.path.join(str(BASE_DIR)+"\\attendence"+("\\"+str(fname)))
 
         img = open(strr, 'rb')
-        print(strr)
-
+    
         response = FileResponse(img)
-
+        print("Qrcode created")
         return response
         
 
@@ -126,11 +120,9 @@ def generate_qr(request):
         return HttpResponse("error---enjoy")
 
 
-# img = Image.open()
-# def get_qr(request,temp):
-#     return HttpResponse()
 
 
+""""
 def get_qr(response,temp):
     strr=os.path.join(str(BASE_DIR)+"\\attendence\\All_QR_codes"+("\\"+str(temp)+".png"))
 
@@ -140,7 +132,7 @@ def get_qr(response,temp):
     response = FileResponse(img)
 
     return response
-        
+"""    
 
     
 

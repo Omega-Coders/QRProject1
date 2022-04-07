@@ -12,7 +12,7 @@ urlpatterns = [
     path('register/generate_qr', views.generate_qr),
 
 
-   re_path(r'^All_QR_codes/(?P<temp>[\w-]+)',views.get_qr),
+   
 
 
 

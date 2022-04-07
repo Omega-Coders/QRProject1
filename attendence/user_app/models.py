@@ -21,7 +21,7 @@ class Attendence(models.Model):
     section = models.CharField(max_length=1, null=True)
     period = models.IntegerField()
     Date   = models.CharField(max_length=10)
-    img = models.ImageField(upload_to='./All_QR_codes',null=True)
+    
 
     def __str__(self):
         return str(self.Teacher_user_id)
