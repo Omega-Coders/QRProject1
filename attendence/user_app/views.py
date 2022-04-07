@@ -91,7 +91,7 @@ def generate_qr(request):
 
         date=request.POST['date']
 
-        s = "http://127.0.0.1:8000/link"
+        s = "http://127.0.0.1:8000/link"+str(date)+"_"+str(period)
   
         
         img = qrcode.make(s)
