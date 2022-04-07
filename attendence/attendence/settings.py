@@ -9,6 +9,26 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+
+from distutils.debug import DEBUG
+from pathlib import Path,os
+from .info import *
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+EMAIL_USE_TLS=EMAIL_USE_TLS
+EMAIL_HOST = EMAIL_HOST
+EMAIL_HOST_USER=EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD
+EMAIL_PORT=EMAIL_PORT
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+
+# SECURITY WARNING: don't run with debug turned on in production
+
 import os
 from pathlib import Path
 
@@ -27,6 +47,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATICFILES_DIRS=[
+    os.path.join (BASE_DIR, "Scanner/static"), 
+]
+
+STATICFILES_FINDER=[
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # Application definition
 
@@ -37,7 +65,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_app'
+    'user_app',
+    'Scanner'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +84,7 @@ ROOT_URLCONF = 'attendence.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'user_app/templets')],
+        'DIRS': ["templets"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,10 +146,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS=[
-    BASE_DIR / "static",
-    '/var/www/static'
-]
+# STATICFILES_DIRS=[
+#     BASE_DIR / "static",
+#     '/var/www/static'
+# ]
 
 
 # Default primary key field type

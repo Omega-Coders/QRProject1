@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import qrcode
-from pyqrcode import QRCode
+#from pyqrcode import QRCode
 from django.http import FileResponse
 
 
@@ -118,6 +118,7 @@ def generate_qr(request):
     else:
         print("error---enjoy")
         return HttpResponse("error---enjoy")
+
 
 
 
