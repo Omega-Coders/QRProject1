@@ -244,6 +244,27 @@ body{
                         <i class="uil uil-envelope icon"></i>
                     </div>
                     <div class="input-field">
+                        <span class="details">Select Student Department :</span>
+                        <select name="dept" >
+            
+                            {% for i in department.obj %}
+                            <option value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                            
+                        </select>
+                    </div><br>
+            
+                    <div class="input-field">
+                        <span class="details" >Select Section :</span>
+                        <select name="section" >
+            
+                            {% for i in section %}
+                            <option  value="{{i}}" >{{i}}</option>
+                            {% endfor %}
+                            
+                        </select>
+                    </div><br>
+                    <div class="input-field">
                         <input type="password" id="pass1" name="pass1" class="password" placeholder="Create a password" required>
                         <i class="uil uil-lock icon"></i>
                     </div>

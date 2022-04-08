@@ -28,18 +28,39 @@ from django.http.response import StreamingHttpResponse
 from .camera import VideoCamera
 from.tokens import account_activation_token
 from django.utils import timezone
+from user_app.models import *
 
 
 
 def home(request):
-    return render(request,'Scanner/index.html')
+    dip_list=[]
+    for i in Department.objects.all():
+        dip_list.append(i.deptName)
+
+    context1={'obj':dip_list}
+    #period=[1, 2, 3, 4, 5, 6, 7, 8]
+    section=['-','A','B','C','D']
+    #return render(request,'take_attendence.html',{'teacher':context,'department':context1,'period':period,'section':section})
+    return render(request,'Scanner/index.html',{'department':context1,'section':section})
 def signup(request):
+    dip_list=[]
+    for i in Department.objects.all():
+        dip_list.append(i.deptName)
+
+    context1={'obj':dip_list}
+    #period=[1, 2, 3, 4, 5, 6, 7, 8]
+    section=['-','A','B','C','D']
     if request.method =="POST":
+        
+        #return render(request,'take_attendence.html',{'teacher':context,'department':context1,'period':period,'section':section})
+        #return render(request,'Scanner/index.html',{'department':context1,'section':section})
         username=request.POST.get("username",False)
         email= request.POST.get('emailid',False)
         pass1 =request.POST.get('pass1',False)
-        pass2 = request.POST.get("pass2",False)   
-            #messages.success(request,"your are successfully logined")
+        pass2 = request.POST.get("pass2",False)
+        dept1 =request.POST.get("dept",False)
+        sec =request.POST.get("section",False)
+                #messages.success(request,"your are successfully logined")
         if(pass1 == pass2):
             if Student.objects.filter(user_name=username).exists():
                 messages.info(request,"username already exists")
@@ -50,27 +71,27 @@ def signup(request):
                 return redirect('signup')
             else:
                 
-                myuser = Student.objects.create(user_name=username,emailid=email,password =pass1)
+                myuser = Student.objects.create(user_name=username,emailid=email,password =pass1,department1=dept1,section=sec)
                 myuser.is_active=False
                 #myuser1=myuser
                 myuser.save()
-                #return redirect('signin') 
-                #return redirect('signin')     
-                    
-                        #Student.objects.create(myuser.cleaned_data)
+                    #return redirect('signin') 
+                    #return redirect('signin')     
                         
-                    #return HttpResponse(request,"created")
+                            #Student.objects.create(myuser.cleaned_data)
+                            
+                        #return HttpResponse(request,"created")
+                        
+                    #elif(Student.objects.filter(user_name=username).exists()==False):
+                        #myuser = Student.objects.create(user_name=username,emailid=email,password =pass1)
+                        #myuser.save()              
                     
-                #elif(Student.objects.filter(user_name=username).exists()==False):
-                    #myuser = Student.objects.create(user_name=username,emailid=email,password =pass1)
-                    #myuser.save()              
-                
-                        #Student.objects.create(myuser.cleaned_data)
-                    #return redirect('signin')
-                    
+                            #Student.objects.create(myuser.cleaned_data)
+                        #return redirect('signin')
+                        
 
-            #return HttpResponse(request,"created")
-            #welcome email
+                #return HttpResponse(request,"created")
+                #welcome email
                 sub="welcome to Qr_attendence webpage"
                 msg="Hello"+myuser.user_name+"!! \n"+"welocme to qr_attendence !! \n Thank ypu for visiting our website \n we have snet you confirmation mail ,please confirm your email to activate your Account .\n\n Thanking you \n Fantastic #4"
                 from_email = settings.EMAIL_HOST_USER
@@ -95,15 +116,11 @@ def signup(request):
                 email.fail_silently = True
                 email.send()
                 return redirect('signin') 
-
-
-
-
-
         else:
             messages.info(request,"password not match")
             return redirect('signup')
-    return render(request,'Scanner/signup.html')
+    #return render(request,'Scanner/signup.html')
+    return render(request,'Scanner/signup.html',{'department':context1,'section':section})
 
             #else:
             #messages.info(request,"not rendering")
@@ -194,8 +211,9 @@ def gen(camera):
 
         if detector is not None:
             for code in  decode(var):
-                if code.data.decode('utf-8') not in camera.getuse():
-                    camera.getuse().append(code.data.decode('utf-8'))
+                camera.getuse().append(code.data.decode('utf-8'))
+                if code.data.decode('utf-8') in camera.getuse():
+                    
                     myuser=Attendence.objects.create(qrinfo=code.data.decode('utf-8'))
                     myuser.save()
                     webbrowser.open(str(code.data.decode('utf-8')))
