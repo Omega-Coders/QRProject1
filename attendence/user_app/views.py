@@ -2,8 +2,9 @@ from django.http import HttpResponse
 import qrcode
 #from pyqrcode import QRCode
 from django.http import FileResponse
-
-
+from Scanner.models import *
+from .models import Teacher, Department,Attendence, TakingAttendence
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Teacher, Department,Attendence
@@ -63,7 +64,7 @@ def login(request):
 
             context1={'obj':dip_list}
             period=[1, 2, 3, 4, 5, 6, 7, 8]
-            section=['-','A','B','C','D']
+            section=['A','B','C','D']
             return render(request,'take_attendence.html',{'teacher':context,'department':context1,'period':period,'section':section})
         else:
             return HttpResponse("Invalid password or Email Id")
@@ -86,12 +87,17 @@ def generate_qr(request):
         stu_dep=request.POST['dept']
         stu_sec=request.POST['section']
         period=request.POST['period']
-
-        
-
         date=request.POST['date']
 
-        s = "http://127.0.0.1:8000/link/"+str(date).replace("-","")+""+str(period)
+
+        
+        stu_depp=stu_dep
+        if(len(stu_dep)==5):
+            stu_depp=stu_dep
+        else:
+            while(len(stu_depp)<5):
+                stu_depp+="_"
+        s = "http://127.0.0.1:8000/link/"+str(date).replace("-","")+""+str(period)+stu_depp+stu_sec
   
         
         img = qrcode.make(s)
@@ -111,13 +117,17 @@ def generate_qr(request):
         img = open(strr, 'rb')
     
         response = FileResponse(img)
-        print("Qrcode created")
-        return response
         
 
+        
+
+        
+            
+        return response
     else:
         print("error---enjoy")
         return HttpResponse("error---enjoy")
+
 
 
 

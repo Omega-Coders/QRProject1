@@ -6,7 +6,7 @@ class Department(models.Model):
     section = models.CharField(max_length=1, null=True)
 
     def __str__(self):
-        return self.deptName
+        return self.deptName+"-"+self.section
 class Teacher(models.Model):
     email = models.CharField(max_length=255)
     department = models.CharField(max_length=20, null=True)
@@ -46,6 +46,8 @@ class TakingAttendence(models.Model):
     period_6 = models.CharField(max_length=255)
     period_7 = models.CharField(max_length=255)
     period_8 = models.CharField(max_length=255)
+
+
 
 
 

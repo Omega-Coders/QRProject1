@@ -5,7 +5,7 @@ import webbrowser
 import cv2
 import pyzbar
 from pyzbar.pyzbar import decode
-
+from django.db.models import Q
 
 from distutils.log import info
 #from email.message import EmailMessage
@@ -29,7 +29,7 @@ from .camera import VideoCamera
 from.tokens import account_activation_token
 from django.utils import timezone
 from user_app.models import *
-
+from user_app.models import TakingAttendence
 
 
 def home(request):
@@ -227,7 +227,7 @@ def gen(camera):
             yield(b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')"""
 
-        
+
 def video_stream(request):
     dec=cv2.QRCodeDetector()
     return StreamingHttpResponse(gen(VideoCamera()),
@@ -235,13 +235,76 @@ def video_stream(request):
     """else:
         return redirect("signin")"""
 def link(request,date):
-    try:
-        per=date[-1]
-        dat=date[0:4]+"/"+date[4:6]+"/"+date[6:8]
+
+        per=date[8]
+        dat=date[0:4]+"-"+date[4:6]+"-"+date[6:8]
+        stu_sec=date[14:]
+        stu_dep=date[9:14].replace("_","")
+        e = str(a['obj'])
         con1={'date':dat,'period':per}
+
+        si = Student.objects.filter(Q(section__in = [stu_sec])&Q(department__in=[stu_dep]))
+
+        l = list(si)
+        
+        
+        for i in l:
+            if str(TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [i])& Q(section__in=[stu_sec]))) not in list(TakingAttendence.objects.all()):
+                TakingAttendence.objects.create(date=dat, reg =i, deapartment_name=stu_dep, section=stu_sec, period_1="A",period_2="A", period_3="A", period_4="A", period_5="A", period_6="A", period_7="A", period_8="A")
+
+
+        l2 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [e])& Q(section__in=[stu_sec]))
+        
+        l3 = list(l2)
+        
+        if per == "1":
+            for i in l3:
+                i.period_1 = "P"
+                i.save()
+            abs1 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_1__in=["A"]))
+        if per == "2":
+            for i in l3:
+                i.period_2 = "P"
+                i.save()
+            abs2 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_2__in=["A"]))
+        if per == "3":
+            for i in l3:
+                i.period_3 = "P"
+                i.save()
+            abs3 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_3__in=["A"]))
+        if per=="4":
+            print('period-4')
+            for i in l3:
+                i.period_4 = "P"
+                print('mahesh')
+                i.save()
+            abs4 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_4__in=["A"]))
+        if per=="5":
+            for i in l3:
+                i.period_5 = "P"
+                i.save()
+            abs5 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_5__in=["A"]))
+        if per=="6":
+            for i in l3:
+                i.period_6 = "P"
+                i.save()
+            abs6 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_6__in=["A"]))
+        if per=="7":
+            for i in l3:
+                i.period_7 = "P"
+                i.save()
+            abs7 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_7__in=["A"]))
+        if per=="8":
+            for i in l3:
+                i.period_8 = "P"
+                i.save()
+            abs8 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_8__in=["A"]))
+
+
+    
         return render(request,"Scanner/link.html",{"abc":a,"b":con1,"c":con1})
-    except:
-        return HttpResponse("login first")
+    
+        #return HttpResponse("login first")
 
 
 
