@@ -70,8 +70,8 @@ def signup(request):
                 messages.info(request,"Email already exists")
                 return redirect('signup')
             else:
-                
-                myuser = Student.objects.create(user_name=username,emailid=email,password =pass1,department1=dept1,section=sec)
+
+                myuser = Student.objects.create(user_name=username,emailid=email,password =pass1,department=dept1,section=sec)
                 myuser.is_active=False
                 #myuser1=myuser
                 myuser.save()
@@ -160,18 +160,17 @@ def signin(request):
         if(Email in Student_dir and Student_dir[Email]==password):
             #messages.info(request,"Successfullyloggedin")
             return redirect("scanner")
-            
+
             #return render(request,'take_attendence.html',context)
         else:
             messages.info(request,"Invalid password or Email Id")
             return redirect("signin")
 
 
-        
+
 
     return render(request,'Scanner/signin.html')
-    
-    
+
 
 """def signout(request):
     pass"""
@@ -214,8 +213,8 @@ def gen(camera):
                 camera.getuse().append(code.data.decode('utf-8'))
                 if code.data.decode('utf-8') in camera.getuse():
                     
-                    myuser=Attendence.objects.create(qrinfo=code.data.decode('utf-8'))
-                    myuser.save()
+                    #myuser=Attendence.objects.create(qrinfo=code.data.decode('utf-8'))
+                    #myuser.save()
                     webbrowser.open(str(code.data.decode('utf-8')))
                     #return HttpResponse("successfully scanned")
                     #messages.info(request,{{code.data.decode('utf-8')}})
