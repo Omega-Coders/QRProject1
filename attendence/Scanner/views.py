@@ -3,10 +3,15 @@ import time
 from unicodedata import name
 from urllib import request
 import webbrowser
+#from attendence.user_app import views
 import cv2
 import pyzbar
 from pyzbar.pyzbar import decode
 from django.db.models import Q
+
+import user_app.views as xx
+
+ 
 
 from distutils.log import info
 #from email.message import EmailMessage
@@ -241,6 +246,11 @@ def video_stream(request):
     """else:
         return redirect("signin")"""
 def link(request,date):
+    print(xx.st)
+    if(xx.st==0):
+
+        return HttpResponse("QR Already expried")
+    else:
 
         per=date[8]
         dat=date[0:4]+"-"+date[4:6]+"-"+date[6:8]
