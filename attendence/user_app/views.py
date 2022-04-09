@@ -2,6 +2,7 @@ from django.http import HttpResponse
 import qrcode
 #from pyqrcode import QRCode
 from django.http import FileResponse
+#from sympy import rcode
 from Scanner.models import *
 from .models import Teacher, Department,Attendence, TakingAttendence
 from django.db.models import Q
@@ -112,7 +113,7 @@ def generate_qr(request):
 
 
 
-        strr=os.path.join(str(BASE_DIR)+"\\attendence"+("\\"+str(fname)))
+        strr=os.path.join(str(BASE_DIR)+"//attendence"+("//"+str(fname)))
 
         img = open(strr, 'rb')
     

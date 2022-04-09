@@ -1,4 +1,5 @@
 from base64 import urlsafe_b64encode
+import time
 from unicodedata import name
 from urllib import request
 import webbrowser
@@ -26,11 +27,11 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.http.response import StreamingHttpResponse
 from .camera import VideoCamera
-from.tokens import account_activation_token
+#from.tokens import account_activation_token
 from django.utils import timezone
 from user_app.models import *
 from user_app.models import TakingAttendence
-
+from .tokens import *
 
 def home(request):
     dip_list=[]
@@ -93,7 +94,7 @@ def signup(request):
                 #return HttpResponse(request,"created")
                 #welcome email
                 sub="welcome to Qr_attendence webpage"
-                msg="Hello"+myuser.user_name+"!! \n"+"welocme to qr_attendence !! \n Thank ypu for visiting our website \n we have snet you confirmation mail ,please confirm your email to activate your Account .\n\n Thanking you \n Fantastic #4"
+                msg="Hello"+" "+myuser.user_name+"!! \n"+"welocme to qr_attendence !! \n Thank you for visiting our website \n we have sent you confirmation mail ,please confirm your email to activate your Account .\n\n Thanking you \n Fantastic #4"
                 from_email = settings.EMAIL_HOST_USER
                 to_list =[myuser.emailid]
                 send_mail(sub,msg,from_email,to_list,fail_silently=True)
@@ -104,8 +105,8 @@ def signup(request):
                     
                     'name': myuser.user_name,
                     'domain': current_site.domain,
-                    'uid': urlsafe_b64encode(force_bytes(myuser.pk)),
-                    'token': account_activation_token.make_token(myuser)
+                    'uid':  urlsafe_base64_encode(force_bytes(myuser.pk)),
+                    'token': generate_token .make_token(myuser)
                 })
                 email = EmailMessage(
                 email_subject,
@@ -176,23 +177,27 @@ def signin(request):
     pass"""
 def activate(request,uidb64,token):
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
+        uid = urlsafe_base64_decode(uidb64).decode()
         myuser = Student.objects.get(pk=uid)
     except (TypeError,ValueError,OverflowError,Student.DoesNotExist):
-        myuser=Student.objects.get(pk=uid)
+        myuser = None
+        #myuser=Student.objects.get(pk=uid)
 
-    if myuser is not None:
-         return render(request,'Scanner/activation_failed.html')
-        
-    else:
+    if myuser is not None and generate_token.check_token(myuser,token):
+        myuser.is_active = True
+        # user.profile.signup_confirmation = True
+         ##return render(request,'Scanner/activation_failed.html')
         #messages.info(request,myuser)
-       
+
         #myuser.is_active = True
         #user.profile.signup_confirmation = True
-        myuser.save()
-        login(request,myuser)
+        #myuser.save()
+        #login(request,myuser)
         messages.info(request, "Your Account has been activated!!")
         return redirect('signin')
+    else:
+        return render(request,'Scanner/activation_failed.html')
+    
 # Create your views here.
 def scanner(request):
     return render(request,"Scanner/Scanner_pg1.html")
@@ -216,6 +221,7 @@ def gen(camera):
                     #myuser=Attendence.objects.create(qrinfo=code.data.decode('utf-8'))
                     #myuser.save()
                     webbrowser.open(str(code.data.decode('utf-8')))
+                    time.sleep(5)
                     #return HttpResponse("successfully scanned")
                     #messages.info(request,{{code.data.decode('utf-8')}})
                 else:
@@ -249,7 +255,7 @@ def link(request,date):
         
         
         for i in l:
-            if str(TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [i])& Q(section__in=[stu_sec]))) not in list(TakingAttendence.objects.all()):
+            if len(TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [i])& Q(section__in=[stu_sec]))) <1:
                 TakingAttendence.objects.create(date=dat, reg =i, deapartment_name=stu_dep, section=stu_sec, period_1="A",period_2="A", period_3="A", period_4="A", period_5="A", period_6="A", period_7="A", period_8="A")
 
 
@@ -262,16 +268,36 @@ def link(request,date):
                 i.period_1 = "P"
                 i.save()
             abs1 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_1__in=["A"]))
+            try:
+                if(i.period_1 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
+                
         if per == "2":
             for i in l3:
                 i.period_2 = "P"
                 i.save()
             abs2 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_2__in=["A"]))
+            try:
+                if(i.period_2 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
         if per == "3":
             for i in l3:
                 i.period_3 = "P"
                 i.save()
+               
+                
             abs3 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_3__in=["A"]))
+            try:
+                if(i.period_3 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
+            
+
         if per=="4":
             print('period-4')
             for i in l3:
@@ -279,26 +305,51 @@ def link(request,date):
                 print('mahesh')
                 i.save()
             abs4 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_4__in=["A"]))
+            try:
+                if(i.period_4 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
         if per=="5":
             for i in l3:
                 i.period_5 = "P"
                 i.save()
             abs5 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_5__in=["A"]))
+            try:
+                if(i.period_5 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
         if per=="6":
             for i in l3:
                 i.period_6 = "P"
                 i.save()
             abs6 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_6__in=["A"]))
+            try:
+                if(i.period_6 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
         if per=="7":
             for i in l3:
                 i.period_7 = "P"
                 i.save()
             abs7 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_7__in=["A"]))
+            try:
+                if(i.period_7 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
         if per=="8":
             for i in l3:
                 i.period_8 = "P"
                 i.save()
             abs8 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= e)& Q(section__in=[stu_sec]) & Q(period_8__in=["A"]))
+            try:
+                if(i.period_8 == "P"):
+                    messages.info(request,"successfully taken")
+            except:
+                messages.info(request,"please try again")
 
 
     

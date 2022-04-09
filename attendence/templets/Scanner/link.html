@@ -11,12 +11,14 @@
                         <input name="username" value="{{abc.obj}}" hidden ><br>
                         <label name="date" value="{{c.date}}">date :{{c.date}}</label><br>
                         <label name="period" value="{{c.period}}">period :{{c.period}}</label><br>
+
                     </div>
                 </centre>
             </from>
-            <form action="">
-                
-            </form>
-        </h2>
+            <div>
+                {% for message in messages %}
+                <h3>{{message}}</h3>
+                {%endfor %}
+            </div
     </body>
 </html>
