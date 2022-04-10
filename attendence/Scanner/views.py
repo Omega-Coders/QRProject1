@@ -172,15 +172,10 @@ def video_stream(request):
     return StreamingHttpResponse(gen(VideoCamera()),
                     content_type='multipart/x-mixed-replace; boundary=frame')
 def link(request,date):
-<<<<<<< HEAD
-    print(xx.st)
     if(xx.st==0):
 
         return HttpResponse("QR Already expried")
     else:
-
-=======
->>>>>>> bcc48dddf665cbdf7929172a949896262879cbbc
         per=date[8]
         dat=date[0:4]+"-"+date[4:6]+"-"+date[6:8]
         stu_sec=date[14:]
