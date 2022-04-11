@@ -8,7 +8,7 @@ from .models import Teacher, Department,Attendence, TakingAttendence
 from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Teacher, Department,Attendence
+from Scanner.models import Student
 
 import os
 from pathlib import Path
@@ -91,7 +91,11 @@ def generate_qr(request):
         period=request.POST['period']
         date=request.POST['date']
 
-
+        si = Student.objects.filter(Q(section__in = [stu_sec])&Q(department__in=[stu_dep]))
+        l = list(si)
+        for i in l:
+            if len(TakingAttendence.objects.filter(Q(date__in = [date])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [i])& Q(section__in=[stu_sec]))) <1:
+                TakingAttendence.objects.create(date=date, reg =i, deapartment_name=stu_dep, section=stu_sec, period_1="A",period_2="A", period_3="A", period_4="A", period_5="A", period_6="A", period_7="A", period_8="A")
         
         stu_depp=stu_dep
         if(len(stu_dep)==5):
@@ -100,7 +104,7 @@ def generate_qr(request):
             while(len(stu_depp)<5):
                 stu_depp+="_"
         s = "http://127.0.0.1:8000/link/"+str(date).replace("-","")+""+str(period)+stu_depp+stu_sec
-  
+
         
         img = qrcode.make(s)
   
@@ -157,8 +161,12 @@ def stop_qr(request):
         abs = TakingAttendence.objects.filter(Q(date__in = [date])& Q(deapartment_name__in =[stu_dep])& Q(section__in=[stu_sec]) & Q(period_8__in=["A"]))
 
 
-    
-    return HttpResponse(abs)
+    lis = list(abs)
+    d = {}
+    for i in range(len(lis)):
+        d[i] = str(lis[i])
+
+    return render(request, 'abs.html', context={'absent': d})
 
 
 

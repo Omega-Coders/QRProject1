@@ -173,7 +173,6 @@ def video_stream(request):
                     content_type='multipart/x-mixed-replace; boundary=frame')
 def link(request,date):
     if(xx.st==0):
-
         return HttpResponse("QR Already expried")
     else:
         per=date[8]
@@ -182,11 +181,6 @@ def link(request,date):
         stu_dep=date[9:14].replace("_","")
         e = str(a['obj'])
         con1={'date':dat,'period':per}
-        si = Student.objects.filter(Q(section__in = [stu_sec])&Q(department__in=[stu_dep]))
-        l = list(si)
-        for i in l:
-            if len(TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [i])& Q(section__in=[stu_sec]))) <1:
-                TakingAttendence.objects.create(date=dat, reg =i, deapartment_name=stu_dep, section=stu_sec, period_1="A",period_2="A", period_3="A", period_4="A", period_5="A", period_6="A", period_7="A", period_8="A")
         l2 = TakingAttendence.objects.filter(Q(date__in = [dat])& Q(deapartment_name__in =[stu_dep])&Q(reg__in= [e])& Q(section__in=[stu_sec]))
         l3 = list(l2)
         if per == "1":
@@ -272,7 +266,7 @@ def link(request,date):
             except:
                 messages.info(request,"please try again")
         return render(request,"Scanner/link.html",{"abc":a,"b":con1,"c":con1})
-    
+
         #return HttpResponse("login first")
 
 

@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import Teacher, Department, Attendence, StudentDetail, TakingAttendence
 
 class TakingAttendenceAdmin(admin.ModelAdmin):
-    list_display = ['date', 'reg', 'period_1', 'period_2', 'period_3','period_4', 'period_5', 'period_6', 'period_7', 'period_8']
+    list_display = ['date', 'reg', 'deapartment_name', 'section','period_1', 'period_2', 'period_3','period_4', 'period_5', 'period_6', 'period_7', 'period_8']
 
 # class StudentDetailAdmin(admin.ModelAdmin):
 #     list_display = ['regno', 'department', 'section']
