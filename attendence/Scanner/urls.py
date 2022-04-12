@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import path,include
 from .import views
 
+
 urlpatterns = [
   path('',views.home, name='home'),
   path('signin',views.signin, name="signin"),
@@ -13,4 +14,6 @@ urlpatterns = [
   path('index', views.index, name='index'),
   path('video_stream', views.video_stream, name='video_stream'),
   path('link/<date>', views.link, name='link'),
+   path('generate_qr', views.generate_qr),
+   path('stop' ,views.stop_qr),
 ]

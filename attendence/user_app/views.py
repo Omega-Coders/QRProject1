@@ -44,19 +44,18 @@ def register(request):
 
     else:
         return HttpResponse("mfnfnf")
-
-
 def login(request):
     if request.method=='POST':
         Email=request.POST['Email']
         password=request.POST['password']
-    
         Teacher_dir={}
-
         for i in Teacher.objects.all():
            Teacher_dir[i.email]=i.password
            if(i.email==Email):
+              
                context={'obj':i}
+               
+               
 
         if(Email in Teacher_dir and Teacher_dir[Email]==password):
             dip_list=[]
@@ -66,22 +65,15 @@ def login(request):
             context1={'obj':dip_list}
             period=[1, 2, 3, 4, 5, 6, 7, 8]
             section=['A','B','C','D']
-            return render(request,'take_attendence.html',{'teacher':context,'department':context1,'period':period,'section':section})
+            return render(request,'take_attendence.html',{'abc':context,'department':context1,'period':period,'section':section})
         else:
             return HttpResponse("Invalid password or Email Id")
 
     else:
         return HttpResponse("fail")
-
-
-
-
-
 from io import BytesIO
 from django.core.files import File
 from PIL import Image, ImageDraw
-
-
 def generate_qr(request):
     if request.method=='POST':
         user_name=request.POST.get('UserName')
@@ -89,10 +81,7 @@ def generate_qr(request):
         stu_dep=request.POST['dept']
         stu_sec=request.POST['section']
         period=request.POST['period']
-        date=request.POST['date']
-
-
-        
+        date=request.POST.get('date')
         stu_depp=stu_dep
         if(len(stu_dep)==5):
             stu_depp=stu_dep
@@ -100,22 +89,12 @@ def generate_qr(request):
             while(len(stu_depp)<5):
                 stu_depp+="_"
         s = "http://127.0.0.1:8000/link/"+str(date).replace("-","")+""+str(period)+stu_depp+stu_sec
-  
-        
         img = qrcode.make(s)
-  
-       
-
         user=Attendence.objects.create(Teacher_user_id=user_name,Student_department=stu_dep, section=stu_sec,period=period,Date=date)
-    
         #fname="Qr_img.png"
         img.save(str(BASE_DIR)+"/attendence/static/Qr_img.png",scale=6)
-        
-
-
         """
         strr=os.path.join(str(BASE_DIR)+"//attendence"+("//"+str(fname)))
-
         img = open(strr, 'rb')
     
         response = FileResponse(img)
@@ -130,11 +109,14 @@ def generate_qr(request):
         print("error---enjoy")
         return HttpResponse("error---enjoy")
 
-
-
 st=1
 def stop_qr(request):
-    os.remove(str(BASE_DIR)+"\\attendence\\static\\Qr_img.png")
+    try:
+
+        os.remove(str(BASE_DIR)+"\\attendence\\static\\Qr_img.png")
+    except:
+        os.remove(str(BASE_DIR)+"//attendence//static//Qr_img.png")
+
     
     global st
     st=0

@@ -37,6 +37,7 @@ from django.utils import timezone
 from user_app.models import *
 from user_app.models import TakingAttendence
 from .tokens import *
+from user_app.views import *
 
 def home(request):
     dip_list=[]
@@ -44,13 +45,13 @@ def home(request):
         dip_list.append(i.deptName)
     context1={'obj':dip_list}
     section=['-','A','B','C','D']
-    return render(request,'Scanner/index.html',{'department':context1,'section':section})
+    return render(request,'Scanner/welcome.html',{'department':context1,'section':section})
 def signup(request):
     dip_list=[]
     for i in Department.objects.all():
         dip_list.append(i.deptName)
     context1={'obj':dip_list} 
-    section=['-','A','B','C','D']
+    section=['A','B','C','D']
     if request.method =="POST":
         global username
         username=request.POST.get("username",False)
@@ -116,9 +117,31 @@ def signin(request):
                context={'obj':i}
                global a 
                a= context
-               print(i.emailid)
+               #print(i.emailid)
+            
         if(Email in Student_dir and Student_dir[Email]==password):
             return redirect("scanner")
+        elif(Email not in Student_dir):
+            Teacher_dir={}
+            for i in Teacher.objects.all():
+                Teacher_dir[i.email]=i.password
+                if(i.email==Email):
+                    global email
+                    context={'obj':i}
+                    email =context
+                    print(email)
+            if(Email in Teacher_dir and Teacher_dir[Email]==password):
+                dip_list=[]
+                for i in Department.objects.all():
+                    dip_list.append(i.deptName)
+
+                context1={'obj':dip_list}
+                period=[1, 2, 3, 4, 5, 6, 7, 8]
+                section=['A','B','C','D']
+                return render(request,'take_attendence.html',{'abc':context,'department':context1,'period':period,'section':section})
+            else:
+                messages.info(request,"Invalid password or Email Id")
+            return redirect("signin")
         else:
             messages.info(request,"Invalid password or Email Id")
             return redirect("signin")
@@ -131,19 +154,21 @@ def activate(request,uidb64,token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         username1=None
-        print(uid)
-        print(email)
         if  uid is not None:   
             username1 = uid
     except (TypeError,ValueError,OverflowError,Student.DoesNotExist):
         username1 = None
-    if username1 is not None and generate_token.check_token(username1,token):
-        #username1.is_active = True
-        myuser = Student.objects.create(user_name=username,emailid=email1,password =pass1,department=dept1,section=sec)
-        messages.info(request, "Your Account has been activated!!")
-        return redirect('signin')
-    else:
-        return render(request,'Scanner/activation_failed.html')
+    try:
+
+        if username1 is not None and generate_token.check_token(username1,token):
+            #username1.is_active = True
+            myuser = Student.objects.create(user_name=username,emailid=email1,password =pass1,department=dept1,section=sec)
+            messages.info(request, "Your Account has been activated!!")
+            return redirect('signin')
+        else:
+            return render(request,'Scanner/activation_failed.html')
+    except:
+        return HttpResponse("link already expired")
 def scanner(request):
     return render(request,"Scanner/Scanner_pg1.html")
 def index(request):

@@ -5,18 +5,9 @@
         </title>
     </head>
     <body>
-        <h3>
-            Qr_scannig
-        </h3>
-       <center><img src="{% url 'video_stream'%}"></center>
-       <div>
-        <label  name="abc" value="{{abc.obj.emailid}}">User Name : {{abc.obj.emailid}}</label><br>
-        <input name="username" value="{{abc.obj.emailid}}" hidden >
-       </div>
-       <div>
-        {% for message in messages %}
-        <h3>{{message}}</h3>
-        {%endfor %}
-    </div>  
+        <center><h3>
+            Qr_scannig </h3></center> 
+        
+       <center><img src="{% url 'video_stream'%}"></center> 
     </body>
 </html>

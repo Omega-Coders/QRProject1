@@ -1,310 +1,215 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" dir="ltr">
+  <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    <title> Responsive Registration Form  </title>
+    
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <style>
+         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins',sans-serif;
 }
-
 body{
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #DAF7A6;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: #f1f8fc;
 }
-
 .container{
-    position: relative;
-    max-width: 500px;
+  max-width: 600px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+.container .title{
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+.container .title::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+.content form .user-details{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+form .user-details .input-box{
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 20px);
+}
+form .input-box span.details{
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.user-details .input-box input{
+  height: 45px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+.user-details .input-box input:focus,
+.user-details .input-box input:valid{
+  border-color: #5bacdf;
+}
+ form .gender-details .gender-title{
+  font-size: 20px;
+  font-weight: 500;
+ }
+ form .category{
+   display: flex;
+   width: 80%;
+   margin: 14px 0 ;
+   justify-content: space-between;
+ }
+ form .category label{
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+ }
+ form .category label .dot{
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: #d9d9d9;
+  border: 5px solid transparent;
+  transition: all 0.3s ease;
+}
+ #dot-1:checked ~ .category label .one,
+ #dot-2:checked ~ .category label .two,
+ #dot-3:checked ~ .category label .three{
+   background: #9b59b6;
+   border-color: #d9d9d9;
+ }
+ form input[type="radio"]{
+   display: none;
+ }
+ form .button{
+   height: 45px;
+   margin: 0 75px
+ }
+ form .button input{
+   height: 100%;
+   width: 100%;
+   border-radius: 5px;
+   border: none;
+   color: #fff;
+   font-size: 18px;
+   font-weight: 500;
+   letter-spacing: 1px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   background: linear-gradient(135deg, #71b7e6, #9b59b6);
+ }
+ form .button input:hover{
+  /* transform: scale(0.99); */
+  background: #5bacdf;
+  }
+ @media(max-width: 584px){
+ .container{
+  max-width: 100%;
+}
+form .user-details .input-box{
+    margin-bottom: 15px;
     width: 100%;
-    background: #fff;
-    border-radius: -10px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    margin: 0 120px;
-}
-
-.container .forms{
-    display: flex;
-    align-items: center;
-    height: 480px;
-    width: 200%;
-    transition: height 0.4s ease;
-}
-
-
-.container .form{
-    width: 50%;
-    padding: 30px;
-    background-color: #fff;
-    transition: margin-left 0.18s ease;
-}
-
-.container.active .login{
-    margin-left: -50%;
-    opacity: 0;
-    transition: margin-left 0.18s ease, opacity 0.15s ease;
-}
-
-.container .signup{
-    opacity: 0;
-    transition: opacity 0.09s ease;
-}
-.container.active .signup{
-    opacity: 1;
-    transition: opacity 0.2s ease;
-}
-
-.container.active .forms{
-    height: 600px;
-}
-.container .form .title{
-    position: relative;
-    font-size: 27px;
-    font-weight: 600;
-}
-
-.form .title::before{
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    background-color: #770737;
-    border-radius: 25px;
-}
-
-.form .input-field{
-    position: relative;
-    height: 50px;
+  }
+  form .category{
     width: 100%;
-    margin-top: 30px;
+  }
+  .content form .user-details{
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+  .user-details::-webkit-scrollbar{
+    width: 5px;
+  }
+  }
+  @media(max-width: 459px){
+  .container .content .category{
+    flex-direction: column;
+  }
 }
-
-.input-field input{
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    padding: 0 45px;
-    border: none;
-    outline: none;
-    font-size: 16px;
-    border-bottom: 2px solid #ccc;
-    border-top: 2px solid transparent;
-    transition: all 0.2s ease;
-}
-
-.input-field input:is(:focus, :valid){
-    border-bottom-color: #770737;
-}
-
-.input-field i{
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    font-size: 23px;
-    transition: all 0.2s ease;
-}
-
-.input-field input:is(:focus, :valid) ~ i{
-    color: #770737;
-}
-
-.input-field i.icon{
-    left: 0;
-}
-.input-field i.showHidePw{
-    right: 0;
-    cursor: pointer;
-    padding: 10px;
-}
-
-.form .checkbox-text{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.checkbox-text .checkbox-content{
-    display: flex;
-    align-items: center;
-}
-
-.checkbox-content input{
-    margin: 0 8px -2px 4px;
-    accent-color: #770737;
-}
-
-.form .text{
-    color: #333;
-    font-size: 14px;
-}
-
-.form a.text{
-    color: #770737;
-    text-decoration: none;
-}
-.form a:hover{
-    text-decoration: underline;
-}
-
-.form .button{
-    margin-top: 35px;
-}
-
-.form .button input{
-    border: none;
-    color: #fff;
-    font-size: 17px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    border-radius: 6px;
-    background-color: #770737;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.button input:hover{
-    background-color: #265df2;
-}
-
-.form .login-signup{
-    margin-top: 30px;
-    text-align: center;
-}
-   
-    </style>  
-   
- <title>Registration Form</title>
-</head>
+     </style>
+   </head>
 <body>
+  <div class="container">
+    <div class="title">Registration</div>
+    <div class="content">
+      <form action="/signup" method="POST">
+        {% csrf_token %}
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Full Name</span>
+            <input type="text" id="username" name="username"placeholder="Enter your name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input type="email"id="emailid"name="emailid" placeholder="Enter your email" required>
+          </div>
+          <div class="input-box">
 
-     <!-- Registration Form -->
+              <label for="Dept"><b>Department:</b></label>
+                <select id="dept" name="dept">
+                    {% for i in department.obj %}
+                    <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+          </div>
+          <div class="input-box">
 
-            <div class="form signup">
- <div style = "position:relative; left:-100px; top:2px;">
- <div class="container">
+        <label for="cars"><b>Section:</b></label>
+                <select id="section" name="section">
+                    {% for i in section %}
+                    <option  value="{{i}}" >{{i}}</option>
+                    {% endfor %}
+                </select>
 
-                 <h2 style="margin-bottom: -18px;">
-                <span class="title"><fontsize="5">  <u>Registration</u></fontsize></span></h2>
-                    <form action="/signup" method="POST">
-                        {% csrf_token %}
-            
-                        <div class="input-field">
-                            <input type="text" id="username" name="username" placeholder="Enter your name" required>
-                            <i class="uil uil-user"></i>
-                        </div>
+          </div>
+          <div class="input-box">
+            <span class="details"><b>Create Password</b></span>
+            <input type="password" id="pass1" name="pass1"placeholder="Enter your password" required>
+          </div>
 
-                    <div class="input-field">
-                        <input type="email" id="emailid" name="emailid"placeholder="Enter your email" required>
-                        <i class="uil uil-envelope icon"></i>
-                    </div>
-                    <div class="input-field">
-                        <span class="details">Select Student Department :</span>
-                        <select name="dept" >
-            
-                            {% for i in department.obj %}
-                            <option value="{{i}}">{{i}}</option>
-                            {% endfor %}
-                            
-                        </select>
-                    </div><br>
-            
-                    <div class="input-field">
-                        <span class="details" >Select Section :</span>
-                        <select name="section" >
-            
-                            {% for i in section %}
-                            <option  value="{{i}}" >{{i}}</option>
-                            {% endfor %}
-                            
-                        </select>
-                    </div><br>
-
-                    <div class="input-field">
-                        <input type="password" id="pass1" name="pass1"class="password" placeholder="Create a password" required>
-                        <i class="uil uil-lock icon"></i>
-                    </div>
-                    <div class="input-field">
-                        <input type="password" id="pass2" name="pass2"class="password" placeholder="Confirm a password" required>
-                        <i class="uil uil-lock icon"></i>
-                        <i class="uil uil-eye-slash showHidePw"></i>
-                    </div>
-
-                    <div class="checkbox-text">
-                        <div class="checkbox-content">
-                            <input type="checkbox" id="sigCheck">
-                            <label for="sigCheck" class="text">Remember me</label>
-                        </div>
-                        <a href="#" class="text">Forgot password?</a>
-                    </div>
-
-                    <div class="input-field button">
-                        <input type="submit" value="Register">
-                    </div>
-                </form>
-               <div>
-                   {% for message in messages %}
-                   <h3>{{message}}</h3>
-                   {%endfor %}
-               </div>   
-            </div>
+          <div class="input-box"><span class="details"><b>Confirm Password</b></span>
+            <input type="password"id='pass2'name="pass2" placeholder="Confirm your password" required>
+          </div>
+        </div>
+    <div class="button">
+          <input type="submit" value="signUp">
         </div>
 
+      </form>
+      <div>
+        {% for message in messages %}
+        <h3>{{message}}</h3>
+        {%endfor %}
+    </div> 
     </div>
-    
-    </div>
-</div>
-    <script>
-         const container = document.querySelector(".container"),
-      pwShowHide = document.querySelectorAll(".showHidePw"),
-      pwFields = document.querySelectorAll(".password"),
-      signUp = document.querySelector(".signup-link"),
-      login = document.querySelector(".login-link");
-
-    //   js code to show/hide password and change icon
-    pwShowHide.forEach(eyeIcon =>{
-        eyeIcon.addEventListener("click", ()=>{
-            pwFields.forEach(pwField =>{
-                if(pwField.type ==="password"){
-                    pwField.type = "text";
-
-                    pwShowHide.forEach(icon =>{
-                        icon.classList.replace("uil-eye-slash", "uil-eye");
-                    })
-                }else{
-                    pwField.type = "password";
-
-                    pwShowHide.forEach(icon =>{
-                        icon.classList.replace("uil-eye", "uil-eye-slash");
-                    })
-                }
-            }) 
-        })
-    })
-
-    // js code to appear signup and login form
-    signUp.addEventListener("click", ( )=>{
-        container.classList.add("active");
-    });
-    login.addEventListener("click", ( )=>{
-        container.classList.remove("active");
-    });
-
-    
-    </script>
-
+  </div>
 </body>
 </html>
+
+
