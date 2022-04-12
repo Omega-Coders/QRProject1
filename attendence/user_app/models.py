@@ -46,6 +46,8 @@ class TakingAttendence(models.Model):
     period_6 = models.CharField(max_length=255)
     period_7 = models.CharField(max_length=255)
     period_8 = models.CharField(max_length=255)
+    def __str__(self) -> str:
+        return self.reg
 
 
 
