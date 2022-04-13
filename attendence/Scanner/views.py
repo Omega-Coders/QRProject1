@@ -1,5 +1,6 @@
 from base64 import urlsafe_b64encode
 import time
+import os
 from unicodedata import name
 from urllib import request
 import webbrowser
@@ -8,11 +9,7 @@ import cv2
 import pyzbar
 from pyzbar.pyzbar import decode
 from django.db.models import Q
-
 import user_app.views as xx
-
- 
-
 from distutils.log import info
 #from email.message import EmailMessage
 from django.core.mail import EmailMessage
@@ -121,7 +118,7 @@ def signin(request):
             
         if(Email in Student_dir and Student_dir[Email]==password):
             return redirect("scanner")
-        elif(Email not in Student_dir):
+        if(Email not in Student_dir or Student_dir[Email]!=password ) :
             Teacher_dir={}
             for i in Teacher.objects.all():
                 Teacher_dir[i.email]=i.password
@@ -150,6 +147,14 @@ def signin(request):
 
 """def signout(request):
     pass"""
+def dir():
+    directory="qr"
+    parent_dir=os.path.abspath("//")
+    print(parent_dir)
+    path=os.path.join(parent_dir,directory)
+    os.mkdir(path)
+
+
 def activate(request,uidb64,token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
@@ -162,12 +167,16 @@ def activate(request,uidb64,token):
 
         if username1 is not None and generate_token.check_token(username1,token):
             #username1.is_active = True
+    
             myuser = Student.objects.create(user_name=username,emailid=email1,password =pass1,department=dept1,section=sec)
+        
+          
             messages.info(request, "Your Account has been activated!!")
             return redirect('signin')
         else:
             return render(request,'Scanner/activation_failed.html')
     except:
+        
         return HttpResponse("link already expired")
 def scanner(request):
     return render(request,"Scanner/Scanner_pg1.html")
@@ -182,6 +191,7 @@ def gen(camera):
             for code in  decode(var):
                 camera.getuse().append(code.data.decode('utf-8'))
                 if code.data.decode('utf-8') in camera.getuse():
+                    #dir()
                     webbrowser.open(str(code.data.decode('utf-8')))
                     time.sleep(5)
                 else:
@@ -290,7 +300,7 @@ def link(request,date):
                     messages.info(request,"successfully taken")
             except:
                 messages.info(request,"please try again")
-        return render(request,"Scanner/link.html",{"abc":a,"b":con1,"c":con1})
+        return render(request,"Scanner/link.html")
 
         #return HttpResponse("login first")
 

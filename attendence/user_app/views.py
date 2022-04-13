@@ -1,14 +1,25 @@
 from django.http import HttpResponse
+from base64 import urlsafe_b64encode
 import qrcode
+from django.core.mail import EmailMessage
 #from pyqrcode import QRCode
 from django.http import FileResponse
 #from sympy import rcode
 from Scanner.models import *
+from attendence import settings
+from django.contrib.sites.shortcuts import get_current_site
 from .models import Teacher, Department,Attendence, TakingAttendence
 from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse
 from Scanner.models import Student
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import redirect, render,get_object_or_404
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from Scanner.tokens import *
 
 import os
 from pathlib import Path
@@ -25,12 +36,75 @@ def login1(request):
 def register(request):
 
     if request.method=='POST':
-        Email=request.POST['Email']
-        departmentt=request.POST['dept']
+        global email
+        email=request.POST['Email']
+        b= email.find("@")
+        username=email[:b]
+        global departmentt
+        departmentt=request.POST.get("dept",False)
+        global password1
         password1=request.POST['Password']
         conform_pass=request.POST['Conform password']
-        
-        if(password1==conform_pass):
+        if(password1 == conform_pass):
+            
+                     
+            if Teacher.objects.filter(email= email).exists():
+                messages.info(request,"Email already exists")
+                return redirect('register')
+            else:
+                #myuser = Student.objects.create(user_name=username,emailid=email,password =pass1,department=dept1,section=sec)
+                #myuser.is_active=False
+                #myuser.save()
+                # sending an eamil msg to clent 
+                sub="welcome to Qr_attendence webpage"
+                msg="Hello"+" "+username+"!! \n"+"welocme to qr_attendence !! \n Thank you for visiting our website \n we have sent you confirmation mail ,please confirm your email to activate your Account .\n\n Thanking you \n Fantastic #4"
+                from_email = settings.EMAIL_HOST_USER
+                to_list =[email]
+                send_mail(sub,msg,from_email,to_list,fail_silently=True)
+                #sending an email link
+                current_site = get_current_site(request)
+                email_subject = "Confirm your Email @ Qr-attendence  Login!!"
+                message2 = render_to_string('email_confirmation1.html',{
+                    'name': username,
+                    'domain': current_site.domain,
+                    'uid':  urlsafe_base64_encode(force_bytes(email)),
+                    'token': generate_token .make_token(email)
+                })
+                email = EmailMessage(
+                email_subject,
+                message2,
+                settings.EMAIL_HOST_USER,
+                [email],
+                )
+                email.fail_silently = True
+                email.send()
+                return redirect('signin') 
+        else:
+            messages.info(request,"password not match")
+            return redirect('register')
+    return render(request,'reg_form.html')
+def activate1(request,uidb64,token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        username1=None
+        print(uid)
+        if  uid is not None:   
+            username1 = uid
+            print(username1)
+    except (TypeError,ValueError,OverflowError,Student.DoesNotExist):
+        username1 = None
+    try:
+        if username1 is not None and generate_token.check_token(username1,token):
+            #username1.is_active = True
+            myuser=Teacher.objects.create(email=username1,password=password1, department=departmentt)
+            messages.info(request, "Your Account has been activated!!")
+            return redirect('signin')
+        else:
+            return render(request,'Scanner/activation_failed.html')
+    except:
+        return HttpResponse("link already expired")
+    return HttpResponse("link already expired")
+    """if(password1==conform_pass):
             
             if Teacher.objects.filter(email = Email).exists():
                 return HttpResponse("Email already exists")
@@ -43,7 +117,9 @@ def register(request):
             return HttpResponse("password not match")
 
     else:
-        return HttpResponse("mfnfnf")
+        return HttpResponse("mfnfnf")"""
+
+
 def login(request):
     if request.method=='POST':
         Email=request.POST['Email']
@@ -120,7 +196,7 @@ def stop_qr(request):
         os.remove(str(BASE_DIR)+"//attendence//static//Qr_img.png")
 
     
-    
+    global st
     st=0
     
     if period == '1':

@@ -1,5 +1,153 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Successful-Page</title>
+      <style>
+          .checkmark-circle {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 180px;
+}
+.checkmark-circle .background {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #2EB150;
+  position: absolute;
+}
+.checkmark-circle .checkmark {
+  border-radius: 5px;
+}
+.checkmark-circle .checkmark.draw:after {
+  -webkit-animation-delay: 100ms;
+  animation-delay: 100ms;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function: ease;
+  -webkit-animation-name: checkmark;
+  animation-name: checkmark;
+  transform: scaleX(-1) rotate(135deg);
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+.checkmark-circle .checkmark:after {
+  opacity: 1;
+  height: 75px;
+  width: 37.5px;
+  transform-origin: left top;
+  border-right: 15px solid white;
+  border-top: 15px solid white;
+  border-radius: 2.5px !important;
+  content: "";
+  left: 25px;
+  top: 75px;
+  position: absolute;
+}
+
+@-webkit-keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 37.5px;
+    opacity: 1;
+  }
+  40% {
+    height: 75px;
+    width: 37.5px;
+    opacity: 1;
+  }
+  100% {
+    height: 75px;
+    width: 37.5px;
+    opacity: 1;
+  }
+}
+@keyframes checkmark {
+  0% {
+    height: 0;
+    width: 0;
+    opacity: 1;
+  }
+  20% {
+    height: 0;
+    width: 37.5px;
+    opacity: 1;
+  }
+  40% {
+    height: 75px;
+    width: 37.5px;
+    opacity: 1;
+  }
+  100% {
+    height: 75px;
+    width: 37.5px;
+    opacity: 1;
+  }
+}
+
+.animate-charcter
+{
+   text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    #231557 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  color: #fff;
+  background-clip: text;
+  -text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+  display: inline-block;
+      font-size: 30px;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}
+      </style>
+</head>
+<body>
+
+  <center>
+<div class="checkmark-circle">
+  <div class="background"></div>
+  <div class="checkmark draw"></div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 text-center">
+        {% for message in messages %}
+                
+               
+      <h4 class="animate-charcter">{{message}}</h4>
+      {%endfor %}
+    </div>
+  </div>
+</div>
+</center>
+</body>
+</html>
+<!--<!DOCTYPE html>
+<html>
     <body>
         <h2>
             <from action="signin" method="POST">
@@ -7,7 +155,7 @@
                 <centre><br><br>
                     <div>
                         <input name="name1" value="var" hidden>
-                        <!--<label  name="abc" value="{{abc.obj.emailid}}">User Name :{{abc.obj.emailid}} </label><br>-->
+                        <label  name="abc" value="{{abc.obj.emailid}}">User Name :{{abc.obj.emailid}} </label><br>
                         <input name="username" value="{{abc.obj.emailid}}" ><br>
                         <label name="date" value="{{c.date}}">date :{{c.date}}</label><br>
                         <label name="period" value="{{c.period}}">period :{{c.period}}</label><br>
@@ -21,4 +169,4 @@
                 {%endfor %}
             </div
     </body>
-</html>
+</html>-->
